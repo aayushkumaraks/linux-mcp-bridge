@@ -1,0 +1,28 @@
+{
+  "dependencies": {
+    "body-parser": "^2.2.0",
+    "dotenv": "^17.2.3",
+    "express": "^5.1.0",
+    "node-fetch": "^3.3.2",
+    "react": "^19.2.0",
+    "react-dom": "^19.2.0"
+  },
+  "scripts": {
+    "start": "node server.js",
+    "build:ui": "node build-ui.js",
+    "watch:ui": "node build-ui.js --watch"
+  },
+  "devDependencies": {
+    "@eslint/css": "^0.14.1",
+    "@eslint/js": "^9.39.1",
+    "@eslint/json": "^0.14.0",
+    "@eslint/markdown": "^7.5.1",
+    "esbuild": "^0.27.0",
+    "eslint": "^9.39.1",
+    "eslint-config-prettier": "^10.1.8",
+    "eslint-plugin-prettier": "^5.5.4",
+    "globals": "^16.5.0",
+    "marked": "^17.0.0",
+    "prettier": "^3.6.2"
+  }
+}
