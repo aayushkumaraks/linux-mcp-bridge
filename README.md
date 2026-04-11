@@ -8,8 +8,11 @@ Note: THIS README WAS GENERATED USING LLM.
 
 - 🤖 Chat interface for interacting with Ollama models
 - 🔧 Tool calling support for executing Linux commands
-- 💬 Real-time streaming responses with thinking indicators
-- 🎨 Modern, gradient-based dark UI
+- 💬 Real-time streaming responses with robust NDJSON parsing
+- 🖥️ Persistent shell sessions with command history continuity
+- ⌨️ Interactive stdin support for commands that require user input
+- 📡 Live terminal output stream via Server-Sent Events (SSE)
+- 🎨 Modern split-pane UI for chat and terminal operations
 - 📝 Markdown rendering for AI responses
 - 🔄 Automatic command execution and result polling
 
@@ -17,8 +20,8 @@ Note: THIS README WAS GENERATED USING LLM.
 
 The bridge consists of three main components:
 
-1. **Express Server** ([server.js](server.js)) - Handles API requests and orchestrates communication between Ollama and Linux MCP
-2. **React UI** ([ui-src/App.jsx](ui-src/App.jsx)) - Provides the chat interface
+1. **Express Server** ([server.js](server.js)) - Handles API requests, Ollama tool calling, and persistent interactive shell sessions
+2. **React UI** ([ui-src/App.jsx](ui-src/App.jsx)) - Provides a modern chat + terminal workspace
 3. **Linux MCP Server** [Github Repo](https://github.com/aayushkumaraks/linux-mcp-redis) - Executes shell commands where-ever it is installed
 
 ## Prerequisites
@@ -140,25 +143,70 @@ Streaming endpoint with real-time response updates.
 }
 ```
 
+### Persistent Terminal Session Endpoints
+
+#### GET `/api/terminal/sessions`
+
+Lists all terminal sessions and their status.
+
+#### POST `/api/terminal/sessions`
+
+Creates a new persistent interactive shell session.
+
+#### GET `/api/terminal/sessions/:id`
+
+Gets session details and buffered events.
+
+#### GET `/api/terminal/sessions/:id/stream`
+
+Streams real-time session events via SSE.
+
+#### POST `/api/terminal/sessions/:id/exec`
+
+Runs a command in the existing shell context.
+
+```json
+{
+  "command": "pwd && ls -la"
+}
+```
+
+#### POST `/api/terminal/sessions/:id/input`
+
+Sends interactive stdin to the running command.
+
+```json
+{
+  "input": "y"
+}
+```
+
+#### DELETE `/api/terminal/sessions/:id`
+
+Stops and closes a session.
+
 ## UI Components
 
-- **Chat Area** - Displays conversation history with user and assistant messages
-- **Thinking Indicator** - Shows when the model is processing (with spinner)
-- **Input Bar** - Text area for entering prompts
-- **Toolbar** - Clear and download JSON buttons (UI placeholders)
+- **Assistant Panel** - Chat timeline with markdown rendering and streaming state
+- **Composer** - Keyboard-friendly prompt input (`Enter` to send, `Shift+Enter` newline)
+- **Terminal Panel** - Persistent session output with command and stdin controls
+- **Session Controls** - Create and close shell sessions from the UI
+- **Export Tools** - Clear chat and download conversation JSON
 
 ## Styling
 
-The UI uses a custom dark theme defined in [ui-src/styles.css](ui-src/styles.css) with:
+The UI uses a modern responsive visual system defined in [ui-src/styles.css](ui-src/styles.css) with:
 
-- Gradient backgrounds
-- Teal accent color (`#2dd4bf`)
-- Responsive design for mobile devices
-- Chat bubble layout
+- Split-pane desktop layout and stacked mobile layout
+- Custom typography (`Space Grotesk` + `IBM Plex Mono`)
+- Layered atmospheric backgrounds and elevated surfaces
+- Command-center style terminal treatment
 
 ## Security Notes
 
 ⚠️ **Important**: Always set the `LINUX_API_KEY` in production environments. The server will warn you if it's not set.
+
+Persistent shell sessions execute commands on the bridge host process using the configured shell. Restrict access to this service and run it in a controlled environment.
 
 ## Development Tools
 
